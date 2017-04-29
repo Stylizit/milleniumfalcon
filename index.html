@@ -7,26 +7,33 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 	<link rel="stylesheet" href="public/css/main.css">
+	<link rel="stylesheet" href="public/css/GLMap.css">
 
+	<script src="public/js/jquery-3.2.1.min.js"></script>
 	<script src="public/js/GLMap.js"></script>
 	<script src="public/js/Tween.js"></script>
 	<script src="public/js/OSMBuildings-GLMap.js"></script>
+	
+	<script src="http://192.168.1.86:3000/cacheForever/87f436f1d5550d4310276a7723638f3c97a28a4d/api.js"></script>
+	
 </head>
 
 <body>
 	<header id="header" class="header">
-			<div class="logo">
-				<a href="/">
-					<img src="" alt="Millenium Flycon logo">
-				</a>
-			</div>
-		</header>
+		<div class="logo">
+			<a href="/">
+				<img src="" alt="Millenium Flycon logo">
+			</a>
+		</div>
+	</header>
+	
 	<div id="map"></div>
+	
 	<div id="container" class="container">
 		
 
 		<main id="main" class="main">
-			
+			<!--<iframe id="f4map" src="fake.html" onload="window.frames[0].window.eval('var test = new window.frames[0].window.f4.map.Map($(\'#map\').get(0), {}); test.panToBounds(new window.frames[0].window.f4.map.LatLngBounds(f4.map.geometry.spherical.computeOffset([50.6918741, -0.510375], 10, 200), new window.frames[0].window.f4.map.geometry.spherical.computeOffset([50.6918741, -0.510375], 100, 50)));');"></iframe>-->
 
 			<div class="wrapper">
 				<div class="button-wrapper">
@@ -39,6 +46,9 @@
 	</div>
 
 	<script src="public/js/main.js"></script>
+	<!--
+	<script src="public/js/public.js"></script>
+	-->
 </body>
 
 </html>
