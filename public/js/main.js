@@ -10,9 +10,10 @@ $(document).ready(function () {
 
   var f4map;
 
+var lastPoint;
   //init();
   createMap();
-  center();
+  
   //panToBounds();
 
   function constructURL(obj) {
@@ -34,8 +35,8 @@ $(document).ready(function () {
         phi: 1.719
       },
       {
-        latitude: 52.516,
-        longitude: 13.349,
+        latitude: 51.5254,
+        longitude: -0.086888,
         rotation: -30,
         zoom: 17.2,
         phi: 1.719
@@ -47,7 +48,21 @@ $(document).ready(function () {
 
   function createMap() {
     var points = getFlightPoints();
-    window.f4map = new f4.map.Map($('#map').get(0), {});
+    setTimeout(function () {
+      window.f4map = new f4.map.Map($('#map').get(0), {});
+      center();
+    }, 3000);
+  }
+
+
+
+
+  function queryData(flight, cb) {
+    var api = 'http://192.168.1.86:3001/flightdata?flightCode=' + flight;
+
+    $.get(api, function (data) {
+      cb(data);
+    });
   }
 
   function center () {
@@ -55,13 +70,16 @@ $(document).ready(function () {
     window.f4map.panToBounds(new f4.map.LatLngBounds(f4.map.geometry.spherical.computeOffset([from.latitude, from.longitude], 10, 200), new f4.map.geometry.spherical.computeOffset([from.latitude, from.longitude], 100, 50)));
     setTimeout(function () {
       window.f4map._renderer.setTilt(80);
-      /*
-      window.f4map._renderer.setZoomFromApi(20);
+      
       setTimeout(function () {
+        window.f4map._renderer.setZoomFromApi(20);
 
-      }, 600);
-*/
-    }, 6000);
+        panToBounds(getFlightPoints()[1], getFlightPoints()[2]);
+
+        queryDataAtIntervals();
+
+      }, 500);
+    }, 3000);
   }
 
   function panToBounds (from, to) {
@@ -79,6 +97,44 @@ $(document).ready(function () {
         console.log(url);
         changeSrc($iframe, url);
     });
+  }
+
+  function queryDataAtIntervals(time) {
+    setInterval(function () {
+      queryData('exs670', function(res) {
+        var obj = res.data[Object.keys(res.data)[0]];
+        console.log(obj);
+
+        var points = findEnRoute(obj.activityLog.flights).track;
+        var currentPoint = points[points.length - 1];
+        lastPoint = currentPoint;
+
+        console.log(currentPoint);
+        console.log(currentPoint.coord);
+
+        panToBounds({
+          latitude: currentPoint.coord[1],
+          longitude: currentPoint.coord[0]
+        }, {
+          latitude: currentPoint.coord[1],
+          longitude: currentPoint.coord[0]
+        });
+      });
+    }, 10000);
+  }
+
+  function stopQueryingData () {
+    clearInterval(interval);
+  }
+
+  function findEnRoute(flights) {
+    return flights.find(function (obj) {
+      return obj._state === 'enroute';
+    });
+  }
+
+  function getPoints () {
+    return points;
   }
 
   function changeSrc (iframe, url) {
