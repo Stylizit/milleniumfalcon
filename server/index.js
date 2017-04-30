@@ -3,6 +3,14 @@ var app = express()
 var app2 = express()
 var proxy = require('express-http-proxy');
 const phantom = require('phantom');
+var _ph,
+	_page;
+phantom.create(['--ignore-ssl-errors=yes', '--load-images=no']).then(ph => {
+	_ph = ph;
+	return _ph.createPage();
+}).then(function (page) {
+	_page = page;
+})
 
 app.use('/', function(req, res, next) {
 	proxy('http://core.f4map.com', {
@@ -21,23 +29,12 @@ app.use('/', function(req, res, next) {
 		}
 	})(req, res, next)
 });
-
-app2.get('/', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
-
 app2.get('/flightdata', function(req, res) {
-	var _ph,
-		_page;
+	res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-	phantom.create(['--ignore-ssl-errors=yes', '--load-images=no']).then(ph => {
-		_ph = ph;
-		return _ph.createPage();
-	}).then(page => {
-		_page = page;
-		return _page.open('https://uk.flightaware.com/live/flight/' + req.query.flightCode);
+	_page.open('https://uk.flightaware.com/live/flight/' + req.query.flightCode).then(status => {
+		return _page.property('content')
 	}).then(content => {
 		return _page.evaluate(function() {
 			return fakeMap._data;
@@ -46,8 +43,6 @@ app2.get('/flightdata', function(req, res) {
 		res.json({
 			data: data
 		})
-		_page.close();
-		_ph.exit();
 	}).catch(e => console.log(e));
 })
 
