@@ -1,0 +1,97 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+.header {
+    height: 60px;
+    background-color: #0d92a0;
+}
+
+.logo {
+    text-align: center;
+}
+.logo a {
+    display: inline-block;
+    vertical-align: middle;
+}
+.logo img {
+    padding: 10px;
+    width: auto;
+    height: 40px;
+}
+.logo p {
+    display: inline-block;
+    vertical-align: middle;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05em;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+#f4map {
+    width: 100%;
+    height: 600px;
+    border: 0 none;
+    outline: 0 none;
+}
+
+.osmb {
+
+}
+
+.osmb-viewport {
+    position:absolute;
+}
+
+.osmb-attribution {
+    position:absolute;
+    right:0;
+    bottom:0;
+    padding:1px 3px;
+    background:rgba(255,255,255,0.5);
+    font:11px sans-serif;
+    z-index: 10;
+}
+
+.osmb-attribution a {
+    text-decoration:none;
+    color:#0078A8;
+}
+
+.osmb-attribution a:visited {
+    text-decoration:none;
+    color:#0078A8;
+}
+
+.osmb-attribution a:hover {
+    text-decoration:underline;
+    color:#0078A8;
+}
+
+.glmap-attribution {
+    display: none;
+}
+
+
+
+.f4map-general-spinner {
+
+}
+
+.f4map-nav, .f4map-node {
+    display: none !important;
+}
+.f4map-footer {
+    display: none !important;
+}
