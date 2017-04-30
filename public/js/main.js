@@ -37,7 +37,7 @@ $(document).ready(function () {
 var lastPoint;
   //init();
   createMap();
-  
+
   //panToBounds();
 
   function constructURL(obj) {
@@ -83,15 +83,12 @@ var lastPoint;
 
         center(point, heading);
       });
-      
+
     }, 3000);
   }
 
-
-
-
   function queryData(flight, cb) {
-    var api = 'http://10.0.1.125:3001/flightdata?flightCode=' + flight;
+    var api = 'http://localhost:3001/flightdata?flightCode=' + flight;
 
     $.get(api, function (data) {
       cb(data);
@@ -107,7 +104,7 @@ var lastPoint;
     setTimeout(function () {
       window.f4map._renderer.setHeading(heading);
       window.f4map._renderer.setTilt(80);
-      
+
       setTimeout(function () {
         window.f4map._renderer.setZoomFromApi(20);
 
@@ -175,13 +172,19 @@ var lastPoint;
   }
 
   function changeSrc (iframe, url) {
-    
+
     iframe.ready(function () {
       iframe.attr('src', url);
     });
 
   }
 });
+
+function initFlight(event) {
+  flightCode = document.getElementById("flight-code").value;
+  document.getElementById("flight-input").style = "display: none;";
+  return false;
+}
 
 
 
@@ -238,17 +241,17 @@ var tween = null;
 var isAnimating = false;
 
 [].forEach.call(buttons, function(button){
-   button.addEventListener('click', handleButton, false);      
+   button.addEventListener('click', handleButton, false);
 });
 
 function handleButton(){
   var pointTo = this.getAttribute('data-point');
   var pointFrom = pointTo === 'a' ? 'b' : 'a';
-  
+
   if(currentPoint === pointTo || isAnimating){
     return false;
   }
-  
+
   currentPoint = pointTo;
   startAnimation(pointData[pointFrom](), pointData[pointTo]());
 }
@@ -257,7 +260,7 @@ function startAnimation(valuesFrom, valuesTo){
   if(tween){
     tween.stop();
   }
-  
+
   isAnimating = true;
   tween = new TWEEN.Tween(valuesFrom)
   .to(valuesTo, animationTime)

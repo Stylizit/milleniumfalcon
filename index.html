@@ -14,9 +14,8 @@
 	<script src="public/js/GLMap.js"></script>
 	<script src="public/js/Tween.js"></script>
 	<script src="public/js/OSMBuildings-GLMap.js"></script>
-	
-	<script src="http://192.168.1.86:3000/cacheForever/87f436f1d5550d4310276a7723638f3c97a28a4d/api.js"></script>
-	
+
+	<script src="http://localhost:3000/cacheForever/87f436f1d5550d4310276a7723638f3c97a28a4d/api.js"></script>
 </head>
 
 <body>
@@ -33,19 +32,13 @@
 			</p>
 		</div>
 	</header>
-	
+
 	<div id="map"></div>
-	
-	<div id="container" class="container">
-		
-
-		<main id="main" class="main">
-			<!--<iframe id="f4map" src="fake.html" onload="window.frames[0].window.eval('var test = new window.frames[0].window.f4.map.Map($(\'#map\').get(0), {}); test.panToBounds(new window.frames[0].window.f4.map.LatLngBounds(f4.map.geometry.spherical.computeOffset([50.6918741, -0.510375], 10, 200), new window.frames[0].window.f4.map.geometry.spherical.computeOffset([50.6918741, -0.510375], 100, 50)));');"></iframe>-->
-
-			
-		</main>
-	</div>
-
+	<!--<iframe id="f4map" src="fake.html" onload="window.frames[0].window.eval('var test = new window.frames[0].window.f4.map.Map($(\'#map\').get(0), {}); test.panToBounds(new window.frames[0].window.f4.map.LatLngBounds(f4.map.geometry.spherical.computeOffset([50.6918741, -0.510375], 10, 200), new window.frames[0].window.f4.map.geometry.spherical.computeOffset([50.6918741, -0.510375], 100, 50)));');"></iframe>-->
+	<form id="flight-input" onsubmit="return initFlight()">
+		<input type="text" placeholder="Flight code..." id="flight-code" />
+		<input type="submit" value="Go!" />
+	</form>
 	<script src="public/js/main.js"></script>
 	<!--
 	<script src="public/js/public.js"></script>

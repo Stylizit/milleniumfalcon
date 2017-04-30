@@ -95,3 +95,45 @@ body {
 .f4map-footer {
     display: none !important;
 }
+
+#flight-input {
+    position: absolute;
+    display: flex;
+    top: 20vh;
+    width: 50vw;
+    left: calc(50% - 25vw);
+    border-radius: 8px;
+    overflow: hidden;
+    align-items: stretch;
+}
+
+#flight-input input[type='text'] {
+    padding: 0 15px;
+	margin: 0;
+    flex: 8;
+	line-height: 45px;
+    border-width: 0px;
+	text-align: left;
+	font-size: 15px;
+    background-color: #fff;
+    display: inline-block;
+    color: #0d92a0;
+    text-transform: uppercase;
+}
+
+#flight-input input[type='text']::placeholder{
+    color: rgba(13, 146, 160, 0.7);
+}
+
+#flight-input input[type='submit'] {
+    display: inline-block;
+    padding: 0 15px;
+    flex: 2;
+	margin: 0;
+	line-height: 45px;
+	text-align: left;
+	font-size: 15px;
+    background-color: #0d92a0;
+    color: #fff;
+    border-width: 0px;
+}
