@@ -9,7 +9,7 @@ $(document).ready(function () {
 // http://demo.f4map.com/#lat=51.5288794&lon=-0.0839835&zoom=18&camera.theta=80&camera.phi=1.719
 
   var f4map;
-  var flight_number = "baw36";
+  var flight_number = "baw417";
   var ANIMATION_TIME = 5000;
   var lastPoint;
   var counter = 0;
@@ -84,7 +84,7 @@ $(document).ready(function () {
     var points = getFlightPoints();
     setTimeout(function () {
       window.f4map = new f4.map.Map($('#map').get(0), {});
-
+/*
       queryData(flight_number, function(res) {
         var obj = res.data[Object.keys(res.data)[0]];
         console.log(obj);
@@ -102,6 +102,7 @@ $(document).ready(function () {
 
         center(point, heading, speed, distance);
       });
+*/
 
     }, 3000);
   }
@@ -159,7 +160,7 @@ $(document).ready(function () {
     var distance, cur;
 
     setInterval(function () {
-      var offset = (heading > 180) ? -180 : 180;
+      var offset = (heading > 180) ? -90 : 180;
       window.f4map._renderer.setHeading(heading + offset);
       distance = speed * time / 5000;
       console.log(heading);
@@ -213,9 +214,9 @@ $(document).ready(function () {
   }
 
   function findEnRoute(flights) {
-    return flights.find(function (obj) {
+    return flights.filter(function (obj) {
       return obj._state === 'enroute';
-    });
+    })[0];
   }
 
   function getPoints () {
@@ -229,13 +230,37 @@ $(document).ready(function () {
     });
 
   }
+
+  $('#flight-input').on('submit', function (e) {
+    e.preventDefault();
+
+    flightCode = document.getElementById("flight-code").value;
+    document.getElementById("flight-input").style = "display: none;";
+
+      queryData(flightCode, function(res) {
+          var obj = res.data[Object.keys(res.data)[0]];
+          console.log(obj);
+
+          var points = findEnRoute(obj.activityLog.flights).track;
+          console.log(points);
+
+          var currentPoint = points[points.length - 1];
+          lastPoint = [currentPoint.coord[0], currentPoint.coord[1]];
+
+          console.log(lastPoint);
+
+          var point = obj.activityLog.flights[0].origin.coord;
+          var heading = obj.heading;
+          var speed = obj.groundspeed;
+          var distance = obj.distance;
+
+          center(point, heading, speed, distance);
+        });
+
+    });
 });
 
-function initFlight(event) {
-  flightCode = document.getElementById("flight-code").value;
-  document.getElementById("flight-input").style = "display: none;";
-  return false;
-}
+
 
 
 
