@@ -9,6 +9,30 @@ $(document).ready(function () {
 // http://demo.f4map.com/#lat=51.5288794&lon=-0.0839835&zoom=18&camera.theta=80&camera.phi=1.719
 
   var f4map;
+  var flight_number = "aca143";
+
+  Number.prototype.toRadians = function() { return this * Math.PI / 180; };
+
+  function destinationPoint(distance, bearing, radius) {
+      radius = (radius === undefined) ? 6371e3 : Number(radius);
+
+      // see http://williams.best.vwh.net/avform.htm#LL
+
+      var δ = Number(distance) / radius; // angular distance in radians
+      var θ = Number(bearing).toRadians();
+
+      var φ1 = this.lat.toRadians();
+      var λ1 = this.lon.toRadians();
+
+      var φ2 = Math.asin( Math.sin(φ1)*Math.cos(δ) +
+                          Math.cos(φ1)*Math.sin(δ)*Math.cos(θ) );
+      var λ2 = λ1 + Math.atan2(Math.sin(θ)*Math.sin(δ)*Math.cos(φ1),
+                               Math.cos(δ)-Math.sin(φ1)*Math.sin(φ2));
+      λ2 = (λ2+3*Math.PI) % (2*Math.PI) - Math.PI; // normalise to -180..+180°
+
+      return new LatLon(φ2.toDegrees(), λ2.toDegrees());
+  };
+
 
 var lastPoint;
   //init();
@@ -50,7 +74,16 @@ var lastPoint;
     var points = getFlightPoints();
     setTimeout(function () {
       window.f4map = new f4.map.Map($('#map').get(0), {});
-      center();
+
+      queryData(flight_number, function(res) {
+        var obj = res.data[Object.keys(res.data)[0]];
+        console.log(obj);
+        var point = obj.activityLog.flights[0].origin.coord;
+        var heading = obj.heading;
+
+        center(point, heading);
+      });
+      
     }, 3000);
   }
 
@@ -58,25 +91,29 @@ var lastPoint;
 
 
   function queryData(flight, cb) {
-    var api = 'http://192.168.1.86:3001/flightdata?flightCode=' + flight;
+    var api = 'http://10.0.1.125:3001/flightdata?flightCode=' + flight;
 
     $.get(api, function (data) {
       cb(data);
     });
   }
 
-  function center () {
-    var from = getFlightPoints()[0];
-    window.f4map.panToBounds(new f4.map.LatLngBounds(f4.map.geometry.spherical.computeOffset([from.latitude, from.longitude], 10, 200), new f4.map.geometry.spherical.computeOffset([from.latitude, from.longitude], 100, 50)));
+  function center (point, heading) {
+    window.f4map.panToBounds(new f4.map.LatLngBounds(f4.map.geometry.spherical.computeOffset([point[1], point[0]], 10, 200), new f4.map.geometry.spherical.computeOffset([point[1], point[0]], 100, 50)));
+    prepareFlight(heading);
+  }
+
+  function prepareFlight(heading) {
     setTimeout(function () {
+      window.f4map._renderer.setHeading(heading);
       window.f4map._renderer.setTilt(80);
       
       setTimeout(function () {
         window.f4map._renderer.setZoomFromApi(20);
 
-        panToBounds(getFlightPoints()[1], getFlightPoints()[2]);
+        //panToBounds(getFlightPoints()[1], getFlightPoints()[2]);
 
-        queryDataAtIntervals();
+        queryDataAtIntervals(flight_number);
 
       }, 500);
     }, 3000);
@@ -99,9 +136,9 @@ var lastPoint;
     });
   }
 
-  function queryDataAtIntervals(time) {
+  function queryDataAtIntervals(flightname, time) {
     setInterval(function () {
-      queryData('exs670', function(res) {
+      queryData(flightname, function(res) {
         var obj = res.data[Object.keys(res.data)[0]];
         console.log(obj);
 
