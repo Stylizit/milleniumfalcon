@@ -29,6 +29,7 @@ app.use('/', function(req, res, next) {
 		}
 	})(req, res, next)
 });
+
 app2.get('/flightdata', function(req, res) {
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
