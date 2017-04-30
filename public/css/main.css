@@ -86,7 +86,7 @@ body {
 
 
 .f4map-general-spinner {
-
+    display: none !important;
 }
 
 .f4map-nav, .f4map-node {
@@ -102,7 +102,7 @@ body {
     top: 20vh;
     width: 50vw;
     left: calc(50% - 25vw);
-    border-radius: 8px;
+    border-radius: 4px;
     overflow: hidden;
     align-items: stretch;
 }

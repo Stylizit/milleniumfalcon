@@ -9,7 +9,7 @@ $(document).ready(function () {
 // http://demo.f4map.com/#lat=51.5288794&lon=-0.0839835&zoom=18&camera.theta=80&camera.phi=1.719
 
   var f4map;
-  var flight_number = "swr318";
+  var flight_number = "baw36";
   var ANIMATION_TIME = 5000;
   var lastPoint;
   var counter = 0;
@@ -159,10 +159,10 @@ $(document).ready(function () {
     var distance, cur;
 
     setInterval(function () {
-      window.f4map._renderer.setHeading(heading + 180);
+      var offset = (heading > 180) ? -180 : 180;
+      window.f4map._renderer.setHeading(heading + offset);
       distance = speed * time / 5000;
-      console.log(distance);
-      console.log(speed);
+      console.log(heading);
       cur = destinationPoint(distance, heading);
 
       console.log(cur);
